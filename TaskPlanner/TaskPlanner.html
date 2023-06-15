@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TaskPlanner</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('pexels-codioful-(formerly-gradienta)-7130498.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      color: #555;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+    }
+
+    .input-container {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .input-container input[type="text"] {
+      flex-grow: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      font-size: 16px;
+      color: #555;
+    }
+
+    .input-container button {
+      background-color: #7d9ce0;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .input-container button:hover {
+      background-color: #5f84c7;
+    }
+
+    .task-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .task:last-child {
+      border-bottom: none;
+    }
+
+    .task .checkbox-container {
+      margin-right: 10px;
+    }
+
+    .task .task-description {
+      flex-grow: 1;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .task .delete-button {
+      background-color: #fca6a6;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .task .delete-button:hover {
+      background-color: #f68383;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TaskPlanner</h1>
+    <div class="input-container">
+      <input type="text" id="taskInput" placeholder="Adicionar nova tarefa">
+      <button id="addButton">Adicionar</button>
+    </div>
+    <ul id="taskList" class="task-list"></ul>
+  </div>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const addButton = document.getElementById('addButton');
+    const taskList = document.getElementById('taskList');
+
+    let tasks = [];
+
+    function renderTaskList() {
+      taskList.innerHTML = '';
+
+      tasks.forEach((task, index) => {
+        const listItem = document.createElement('li');
+        listItem.className = 'task';
+
+        const checkboxContainer = document.createElement('div');
+        checkboxContainer.className = 'checkbox-container';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => {
+          toggleTaskCompleted(index);
+        });
+
+        const taskDescription = document.createElement('div');
+        taskDescription.className = 'task-description';
+        taskDescription.textContent = task.description;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.textContent = 'Excluir';
+        deleteButton.addEventListener('click', () => {
+          deleteTask(index);
+        });
+
+        checkboxContainer.appendChild(checkbox);
+        listItem.appendChild(checkboxContainer);
+        listItem.appendChild(taskDescription);
+        listItem.appendChild(deleteButton);
+
+        taskList.appendChild(listItem);
+      });
+    }
+
+    function addTask() {
+      const description = taskInput.value.trim();
+
+      if (description !== '') {
+        const newTask = {
+          description: description,
+          completed: false
+        };
+
+        tasks.push(newTask);
+        taskInput.value = '';
+
+        renderTaskList();
+      }
+    }
+
+    function toggleTaskCompleted(index) {
+      tasks[index].completed = !tasks[index].completed;
+      renderTaskList();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTaskList();
+    }
+
+    addButton.addEventListener('click', addTask);
+
+    taskInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        addTask();
+      }
+    });
+
+    renderTaskList();
+  </script>
+</body>
+</html>
